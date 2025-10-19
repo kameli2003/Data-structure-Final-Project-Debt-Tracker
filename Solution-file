@@ -1,0 +1,540 @@
+package ds;
+import java.util.Scanner;
+class name{
+    public static class NameSorter1 {
+        static class Node1 {
+            String name;
+            Node1 left;
+            Node1 right;
+            int height;
+
+            public Node1(String name) {
+                this.name = name;
+                this.left = null;
+                this.right = null;
+                this.height = 1;
+            }
+        }
+
+        private Node1 root;
+        public void deleteAllNodes() {
+            root = null;  // با تنظیم مقدار ریشه به مقدار null، همه‌ی نودها حذف می‌شوند
+        }
+        public NameSorter1() {
+            root = null;
+        }
+
+        public void addName(String name) {
+            root = insert(root, name);
+        }
+
+        private Node1 insert(Node1 node, String name) {
+            if (node == null) {
+                return new Node1(name);
+            }
+
+            if (name.compareTo(node.name) < 0) {
+                node.left = insert(node.left, name);
+            } else {
+                node.right = insert(node.right, name);
+            }
+
+            node.height = 1 + Math.max(getHeight(node.left), getHeight(node.right));
+
+            int balance = getBalance(node);
+
+            if (balance > 1 && name.compareTo(node.left.name) < 0) {
+                return rotateRight(node);
+            }
+
+            if (balance < -1 && name.compareTo(node.right.name) > 0) {
+                return rotateLeft(node);
+            }
+
+            if (balance > 1 && name.compareTo(node.left.name) > 0) {
+                node.left = rotateLeft(node.left);
+                return rotateRight(node);
+            }
+
+            if (balance < -1 && name.compareTo(node.right.name) < 0) {
+                node.right = rotateRight(node.right);
+                return rotateLeft(node);
+            }
+
+            return node;
+        }
+
+        private int getHeight(Node1 node) {
+            if (node == null) {
+                return 0;
+            }
+            return node.height;
+        }
+
+        private int getBalance(Node1 node) {
+            if (node == null) {
+                return 0;
+            }
+            return getHeight(node.left) - getHeight(node.right);
+        }
+
+        private Node1 rotateRight(Node1 y) {
+            Node1 x = y.left;
+            Node1 T2 = x.right;
+
+            x.right = y;
+            y.left = T2;
+
+            y.height = 1 + Math.max(getHeight(y.left), getHeight(y.right));
+            x.height = 1 + Math.max(getHeight(x.left), getHeight(x.right));
+
+            return x;
+        }
+
+        private Node1 rotateLeft(Node1 x) {
+            Node1 y = x.right;
+            Node1 T2 = y.left;
+
+            y.left = x;
+            x.right = T2;
+
+            x.height = 1 + Math.max(getHeight(x.left), getHeight(x.right));
+            y.height = 1 + Math.max(getHeight(y.left), getHeight(y.right));
+
+            return y;
+        }
+
+        public void printSortedNames() {
+            inorderTraversal(root);
+        }
+
+        private void inorderTraversal(Node1 node) {
+            if (node != null) {
+                inorderTraversal(node.left);
+                System.out.println(node.name);
+                inorderTraversal(node.right);
+            }
+        }
+        public String findFirstSortedName() {
+            return findSmallestNode(root).name;
+        }
+
+        private Node1 findSmallestNode(Node1 node) {
+            if (node.left == null) {
+                return node;
+            }
+            return findSmallestNode(node.left);
+        }
+
+
+    }
+}
+class Node1 {
+    String name1;
+    String name2;
+
+    long money;
+    Node1 left1, right1;
+
+    public Node1(String name, long money) {
+        this.name1 = name;
+        this.money = money;
+        left1 = right1 = null;
+    }
+
+}
+
+class BST1 {
+    Node1 root1;
+
+    // Constructor
+    BST1() {
+        root1 = null;
+    }
+
+    // Insert a new node
+    public void insert(String name, long money) {
+        root1 = insertRec(root1, name, money);
+    }
+
+    Node1 insertRec(Node1 root, String name, long money) {
+        if (root == null) {
+            root = new Node1(name, money);
+            return root;
+        }
+
+        if (name.compareTo(root.name1) < 0)
+            root.left1 = insertRec(root.left1, name, money);
+        else if (name.compareTo(root.name1) > 0)
+            root.right1 = insertRec(root.right1, name, money);
+
+        return root;
+    }
+
+    // Search node by name
+    public Node1 search(String name) {
+        return searchRec(root1, name);
+    }
+
+    Node1 searchRec(Node1 root, String name) {
+        if (root == null || root.name1.equals(name))
+            return root;
+
+        if (name.compareTo(root.name1) < 0)
+            return searchRec(root.left1, name);
+        else
+            return searchRec(root.right1, name);
+    }
+
+    // Update money for a node
+    public void updateMoneyNode2(String name, long addedMoney) {
+        Node1 node = search(name);
+        if (node != null) {
+            node.money += addedMoney;
+        } else {
+            insert(name, addedMoney);
+        }
+    }
+
+    public void updateMoneyNode1(String name, long addedMoney) {
+        Node1 node = search(name);
+        if (node != null) {
+            node.money -= addedMoney;
+        } else {
+            insert(name, -addedMoney);
+        }
+    }
+    public void searchByMoney(long money) {
+        searchByMoneyRec(root1, money);
+    }
+    void searchByMoneyRec(Node1 root, long money) {
+        if (root != null) {
+            searchByMoneyRec(root.left1, money);
+            if (root.money == money) {
+                // sorter1.addName(root.name1);
+                //System.out.println("Name: " + root.name + ", Money: " + root.money);
+            }
+            searchByMoneyRec(root.right1, money);
+        }
+    }
+    public double findMaxMoney() {
+        return findMaxMoneyRec(root1);
+    }
+
+    private double findMaxMoneyRec(Node1 currentNode) {
+        if (currentNode == null) {
+            return 0; // Return the smallest positive nonzero value
+        }
+
+        double currentMoney = currentNode.money;
+        double leftSubtreeMax = findMaxMoneyRec(currentNode.left1);
+        double rightSubtreeMax = findMaxMoneyRec(currentNode.right1);
+
+        return Math.max(currentMoney, Math.max(leftSubtreeMax, rightSubtreeMax));
+    }
+    public double findMinMoney() {
+        return findMinMoneyRec(root1);
+    }
+
+    private double findMinMoneyRec(Node1 currentNode) {
+        if (currentNode == null) {
+            return 0; // Return the smallest positive nonzero value
+        }
+
+        double currentMoney = currentNode.money;
+        double leftSubtreeMax = findMinMoneyRec(currentNode.left1);
+        double rightSubtreeMax = findMinMoneyRec(currentNode.right1);
+
+        return Math.min(currentMoney, Math.min(leftSubtreeMax, rightSubtreeMax));
+    }
+
+    public int countNodesWithPositiveMoney() {
+        return countNodesWithPositiveMoneyRec(root1);
+    }
+    private int countNodesWithPositiveMoneyRec(Node1 root) {
+        if (root == null) {
+            return 0;
+        }
+
+        int count = 0;
+        if (root.money > 0) {
+            count++;
+        }
+        count += countNodesWithPositiveMoneyRec(root.left1);
+        count += countNodesWithPositiveMoneyRec(root.right1);
+
+        return count;
+    }
+    public int countNodesWithNegativeMoney() {
+        return countNodesWithNegativeMoneyRec(root1);
+    }
+    private int countNodesWithNegativeMoneyRec(Node1 root) {
+        if (root == null) {
+            return 0;
+        }
+
+        int count = 0;
+        if (root.money < 0) {
+            count++;
+        }
+        count += countNodesWithNegativeMoneyRec(root.left1);
+        count += countNodesWithNegativeMoneyRec(root.right1);
+
+        return count;
+    }
+
+    public void printAllNodesMoney() {
+        printAllNodesMoneyRec(root1);
+    }
+
+    private void printAllNodesMoneyRec(Node1 root) {
+        if (root != null) {
+            printAllNodesMoneyRec(root.left1);
+            System.out.println("Node Name: " + root.name1 + ", Money: " + root.money);
+            printAllNodesMoneyRec(root.right1);
+        }
+    }
+}
+
+ class Node {
+    String name1;
+
+    double money;
+     BST1 bst1=new BST1();
+    Node left, right;
+    Node1 up;
+    public Node(String name,String nam, double money) {
+        this.name1 = name;
+        this.money = money;
+        left = right = null;
+    }
+
+}
+
+class BST {
+
+
+    name.NameSorter1 sorter1 = new name.NameSorter1();
+    Node root;
+
+    // Constructor
+    BST() {
+        root = null;
+    }
+
+    // Insert a new node
+    public void insert(String name,String nam, long money) {
+
+        root = insertRec(root, name,nam ,money);
+
+    }
+
+    Node insertRec(Node root, String name,String nam, long money) {
+        if (root == null) {
+            root = new Node(name,nam ,money);
+            root.bst1.insert(nam,-money);
+            return root;
+        }
+        if (name.compareTo(root.name1) < 0) {
+            root.left = insertRec(root.left, name, nam, money);
+
+        }else if (name.compareTo(root.name1) > 0)
+            root.right = insertRec(root.right, name,nam ,money);
+
+        return root;
+    }
+
+    // Search node by name
+    public Node search(String name) {
+        return searchRec(root, name);
+    }
+    Node searchRec(Node root, String name) {
+        if (root == null || root.name1.equals(name))
+            return root;
+
+        if (name.compareTo(root.name1) < 0)
+            return searchRec(root.left, name);
+        else
+            return searchRec(root.right, name);
+    }
+
+    // Update money for a node
+    public void updateMoneyNode2(String name, String nam , long addedMoney) {
+        Node node = search(name);
+        if (node != null) {
+            Node1 node1=node.bst1.search(nam);
+            if (node1!=null){
+                node1.money -= addedMoney;
+            }
+            else {
+                node.bst1.insert(nam,-addedMoney);
+            }
+            node.money += addedMoney;
+        } else {
+            insert(name,nam ,addedMoney);
+        }
+    }
+
+    public void updateMoneyNode1(String name, String nam, long addedMoney) {
+        Node node = search(name);
+        if (node != null) {
+            Node1 node1=node.bst1.search(nam);
+            if (node1!=null){
+                node1.money += addedMoney;
+            }
+            else {
+                node.bst1.insert(nam,addedMoney);
+            }
+            node.money -= addedMoney;
+        } else {
+            insert(name,nam ,-addedMoney);
+        }
+    }
+
+    public void searchByMoney(long money) {
+        searchByMoneyRec(root, money);
+    }
+    void searchByMoneyRec(Node root, long money) {
+        if (root != null) {
+            searchByMoneyRec(root.left, money);
+            if (root.money == money) {
+                sorter1.addName(root.name1);
+                //System.out.println("Name: " + root.name + ", Money: " + root.money);
+            }
+            searchByMoneyRec(root.right, money);
+        }
+    }
+    public long findMaxMoney() {
+        return findMaxMoneyRec(root);
+    }
+    private long findMaxMoneyRec(Node currentNode) {
+        if (currentNode == null) {
+            return 0; // Return the smallest positive nonzero value
+        }
+
+        double currentMoney = currentNode.money;
+        double leftSubtreeMax = findMaxMoneyRec(currentNode.left);
+        double rightSubtreeMax = findMaxMoneyRec(currentNode.right);
+
+        return (long) Math.max(currentMoney, Math.max(leftSubtreeMax, rightSubtreeMax));
+    }
+    public long findMinMoney() {
+        return findMinMoneyRec(root);
+    }
+    private long findMinMoneyRec(Node currentNode) {
+        if (currentNode == null) {
+            return 0; // Return the smallest positive nonzero value
+        }
+
+        double currentMoney = currentNode.money;
+        double leftSubtreeMax = findMinMoneyRec(currentNode.left);
+        double rightSubtreeMax = findMinMoneyRec(currentNode.right);
+
+        return (long) Math.min(currentMoney, Math.min(leftSubtreeMax, rightSubtreeMax));
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+
+        BST tree = new BST();
+        Scanner scanner = new Scanner(System.in);
+        scanner.nextLine();
+        int q = scanner.nextInt();
+        //System.out.println(q);
+        scanner.nextLine();
+        String[] str = new String[q+5];
+        for (int i = 0; i < q; i++) {
+            scanner.nextLine();
+            str[i] = scanner.nextLine();
+        }
+        for (int i = 0; i < q; i++) {
+            String[] str1 = str[i].split(" ");
+            //System.out.println(str1[0]);
+            if (str1[0].equals("1")){
+                double x1 = Double.parseDouble(str1[3]);
+                long x = (long) (x1 * 100);
+                {
+                    Node person1  = tree.search(str1[1]);
+                    Node person2 = tree.search(str1[2]);
+
+                    if (person1!=null && person2!=null){
+                        tree.updateMoneyNode1(person1.name1,person2.name1, x);
+                        tree.updateMoneyNode2(person2.name1,person1.name1, x);
+                    }
+                     if (person1!=null && person2==null) {
+                         tree.insert(str1[2],str1[1],x);
+                         tree.updateMoneyNode1(person1.name1,str1[2], x);
+                    }
+                     if (person1==null && person2==null) {
+                         tree.insert(str1[2],str1[1],x);
+                         tree.insert(str1[1],str1[2],-x);
+                    }
+                     if (person1==null && person2!=null) {
+                         tree.insert(str1[1],str1[2],-x);
+                         tree.updateMoneyNode2(person2.name1,str1[1], x);
+                     }
+
+                }
+
+            }
+            if (str1[0].equals("2")){
+                System.out.println();
+                long x = tree.findMaxMoney();
+                tree.searchByMoney(x);
+                if (tree.sorter1.findFirstSortedName()!=null&& x>0.001)
+                     System.out.println(tree.sorter1.findFirstSortedName());
+                else{
+                    System.out.println("-1");
+                }
+                tree.sorter1.deleteAllNodes();
+            }
+            if (str1[0].equals("3")){
+                System.out.println();
+                long x = tree.findMinMoney();
+                tree.searchByMoney(x);
+                if (tree.sorter1.findFirstSortedName()!=null && x < 0)
+                    System.out.println(tree.sorter1.findFirstSortedName());
+                else{
+                    System.out.println("-1");
+                }
+                tree.sorter1.deleteAllNodes();
+            }
+            if (str1[0].equals("4")){
+                System.out.println();
+                Node node = tree.search(str1[1]);
+                System.out.println(node.bst1.countNodesWithNegativeMoney());
+                ///node.bst1.printAllNodesMoney();
+
+            }
+            if (str1[0].equals("5")){
+                System.out.println();
+                Node node = tree.search(str1[1]);
+                System.out.println(node.bst1.countNodesWithPositiveMoney());
+            }
+            if (str1[0].equals("6")){
+                System.out.println();
+                Node node = tree.search(str1[1]);
+                Node1 node1 = node.bst1.search(str1[2]);
+                if (node1!=null){
+                    long x1 = node1.money/100;
+                    long x2 = node1.money%100;
+
+                    if (node1.money<0.001 && node1.money> -0.001){System.out.println("0.00");}
+                    else {
+                        if (x2<0.001 && x2> -0.001){
+                            System.out.println(-x1+"."+"00");
+                        }
+                        else {System.out.println(-x1+"."+x2);}
+                    }
+                }
+                else {
+                    System.out.println("0.00");
+
+                }
+
+            }
+
+        }
+        // Example usage
+    }
+}
